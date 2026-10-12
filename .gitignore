@@ -19,3 +19,5 @@ data/raw/
 .DS_Store
 Thumbs.db
 "@ | Out-File -Encoding utf8 .gitignore
+# dbt (configuração local do usuário)
+.user.yml
