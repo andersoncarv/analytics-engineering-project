@@ -4,5 +4,11 @@ sources:
   - name: sales
     schema: raw_sales
     tables:
+      - name: customers
+        description: "Clientes exportados do CRM em CSV."
+      - name: products
+        description: "Cadastro de produtos mantido em planilha pelo comercial."
       - name: orders
-        description: "Pedidos carregados da fonte de vendas, sem tratamento."
+        description: "Cabeçalho dos pedidos do e-commerce."
+      - name: order_items
+        description: "Itens dos pedidos do e-commerce."

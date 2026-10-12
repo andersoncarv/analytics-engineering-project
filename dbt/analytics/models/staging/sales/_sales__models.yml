@@ -1,17 +1,47 @@
 version: 2
 
 models:
+  - name: stg_sales__customers
+    description: "Clientes. Grain: 1 linha = 1 cliente."
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+      - name: email
+        data_tests: [not_null]
+
+  - name: stg_sales__products
+    description: "Produtos. Grain: 1 linha = 1 produto."
+    columns:
+      - name: sku
+        data_tests: [unique, not_null]
+      - name: product_name
+        data_tests: [not_null]  
+
   - name: stg_sales__orders
-    description: "Pedidos de venda. Grain: 1 linha = 1 pedido."
+    description: "Pedidos, deduplicados mantendo a carga mais recente. Grain: 1 linha = 1 pedido."
     columns:
       - name: order_id
-        description: "Identificador do pedido na fonte."
-        data_tests:
-          - unique
-          - not_null
+        data_tests: [unique, not_null]
       - name: customer_id
-        description: "Cliente do pedido. Regra de nulidade pendente de confirmação com o negócio."
+        description: "Pode ser nulo. Regra pendente de confirmação com o negócio."
         data_tests:
           - not_null:
               config:
                 severity: warn
+      - name: status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['aprovado', 'cancelado']
+      - name: reported_total_amount
+        description: "Total informado pela fonte. Pode divergir da soma dos itens."
+
+  - name: stg_sales__order_items
+    description: "Itens de pedido. Grain: 1 linha = 1 item (order_id + line_number)."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [order_id, line_number]
+    columns:
+      - name: unit_price
+        description: "Preço praticado na venda, que pode diferir do preço de lista."
