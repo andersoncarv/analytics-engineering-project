@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: sales
+    schema: raw_sales
+    tables:
+      - name: orders
+        description: "Pedidos carregados da fonte de vendas, sem tratamento."

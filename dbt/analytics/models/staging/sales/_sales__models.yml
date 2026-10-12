@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: stg_sales__orders
+    description: "Pedidos de venda. Grain: 1 linha = 1 pedido."
+    columns:
+      - name: order_id
+        description: "Identificador do pedido na fonte."
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Cliente do pedido. Regra de nulidade pendente de confirmação com o negócio."
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
