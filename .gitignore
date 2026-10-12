@@ -1,0 +1,21 @@
+@"
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Segredos
+.env
+
+# dbt
+target/
+dbt_packages/
+logs/
+
+# Dados locais
+data/raw/
+
+# Editor / SO
+.DS_Store
+Thumbs.db
+"@ | Out-File -Encoding utf8 .gitignore
