@@ -1,0 +1,5 @@
+    columns:
+      - name: order_date
+        description: "Nula quando o item não encontra o pedido no cabeçalho."
+        data_tests:
+          - not_null
