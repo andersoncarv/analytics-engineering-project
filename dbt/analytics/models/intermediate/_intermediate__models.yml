@@ -18,3 +18,13 @@ models:
         description: "Nula quando o item não encontra o pedido no cabeçalho."
         data_tests:
           - not_null
+
+      - name: sku
+        description: "SKU vendido. Pode não existir no cadastro de produtos."
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_sales__products')
+                field: sku
+              config:
+                severity: warn

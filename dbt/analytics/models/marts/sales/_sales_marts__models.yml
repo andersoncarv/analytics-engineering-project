@@ -22,3 +22,29 @@ models:
     columns:
       - name: sku
         data_tests: [unique, not_null]
+
+  - name: fct_sales
+    description: >
+      Vendas por item. Grain: 1 linha = 1 item de pedido.
+      Valores calculados a partir dos itens (não do total informado pela fonte).
+      Frete não incluído, por estar no grain do pedido.
+      Cancelados incluídos; filtrar com is_cancelled.
+    data_tests:
+      - dbt_utils.equal_rowcount:
+          arguments:
+            compare_model: ref('int_order_items_enriched')
+    columns:
+      - name: sales_key
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+      - name: sku
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: sku
