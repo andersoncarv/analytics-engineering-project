@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: >
+      Clientes. Grain: 1 linha = 1 cliente.
+      Inclui o membro '-1' (Cliente não identificado) para pedidos sem cliente.
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+      - name: email
+        data_tests:
+          - not_null:
+              config:
+                where: "customer_id <> '-1'"
+
+
+  - name: dim_products
+    description: >
+      Produtos. Grain: 1 linha = 1 produto.
+      Inclui o membro '-1' (Produto não identificado) para itens com SKU fora do cadastro.
+    columns:
+      - name: sku
+        data_tests: [unique, not_null]
