@@ -3,6 +3,7 @@ unit_tests:
     description: >
       1) Empate no atualizado_em: vence a versão do arquivo mais recente.
       2) Lead ausente do arquivo mais recente continua no staging, com is_in_latest_file = false.
+      3) Versões com horários diferentes: vence a de updated_at mais recente.
     model: stg_crm__leads
     given:
       - input: source('crm', 'leads')
@@ -10,7 +11,10 @@ unit_tests:
           - {lead_id: 'A001', status: 'novo',        atualizado_em: '01/10/2026 10:00', _source_file: 'leads_20261001.csv', _row_number: 2}
           - {lead_id: 'A001', status: 'qualificado', atualizado_em: '01/10/2026 10:00', _source_file: 'leads_20261002.csv', _row_number: 2}
           - {lead_id: 'B001', status: 'novo',        atualizado_em: '01/10/2026 09:00', _source_file: 'leads_20261001.csv', _row_number: 3}
+          - {lead_id: 'C001', status: 'novo',        atualizado_em: '01/10/2026 08:00', _source_file: 'leads_20261002.csv', _row_number: 3}
+          - {lead_id: 'C001', status: 'convertido',  atualizado_em: '02/10/2026 08:00', _source_file: 'leads_20261002.csv', _row_number: 4}
     expect:
       rows:
         - {lead_id: 'A001', status: 'qualificado', _source_file: 'leads_20261002.csv', is_in_latest_file: true}
         - {lead_id: 'B001', status: 'novo',        _source_file: 'leads_20261001.csv', is_in_latest_file: false}
+        - {lead_id: 'C001', status: 'convertido',  _source_file: 'leads_20261002.csv', is_in_latest_file: true}
