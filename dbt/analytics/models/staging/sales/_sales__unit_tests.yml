@@ -1,0 +1,14 @@
+unit_tests:
+  - name: test_stg_orders_keeps_latest_version
+    description: >
+      Quando o mesmo pedido chega duas vezes com valores diferentes,
+      o staging deve manter a versão carregada mais recentemente.
+    model: stg_sales__orders
+    given:
+      - input: source('sales', 'orders')
+        rows:
+          - {id: '2001', customer_id: 'C01', order_date: '2026-09-10', status: 'aprovado', shipping_amount: '10.00', total_amount: '45.00', _loaded_at: '2026-09-10 08:00:00'}
+          - {id: '2001', customer_id: 'C01', order_date: '2026-09-10', status: 'aprovado', shipping_amount: '10.00', total_amount: '54.00', _loaded_at: '2026-09-10 10:00:00'}
+    expect:
+      rows:
+        - {order_id: '2001', reported_total_amount: 54.00}

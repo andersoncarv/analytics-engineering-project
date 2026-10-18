@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: int_order_items_enriched
+    description: >
+      Itens de pedido enriquecidos com dados do cabeçalho (cliente, data, status).
+      Grain: 1 linha = 1 item (order_id + line_number), igual ao stg_sales__order_items.
+      O frete não é trazido para cá, para evitar fan-out.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [order_id, line_number]
+      - dbt_utils.equal_rowcount:
+          arguments:
+            compare_model: ref('stg_sales__order_items')
+    columns:
+      - name: order_date
+        description: "Nula quando o item não encontra o pedido no cabeçalho."
+        data_tests:
+          - not_null
+
+      - name: sku
+        description: "SKU vendido. Pode não existir no cadastro de produtos."
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_sales__products')
+                field: sku
+              config:
+                severity: warn
