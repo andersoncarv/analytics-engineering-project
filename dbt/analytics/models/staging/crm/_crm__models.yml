@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: stg_crm__leads
+    description: >
+      Leads do CRM, na versão mais recente de cada um (updated_at, desempate pela data do arquivo).
+      Grain: 1 linha = 1 lead. Leads excluídos do CRM continuam aqui com is_in_latest_file = false.
+    columns:
+      - name: lead_id
+        data_tests: [unique, not_null]
+      - name: status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['novo', 'qualificado', 'convertido', 'perdido']
+      - name: updated_at
+        description: "Instante da última atualização. Premissa: exportado em horário de Brasília."
+        data_tests: [not_null]
+      - name: source_file_date
+        description: "Data da exportação, extraída do nome do arquivo."
+        data_tests: [not_null]

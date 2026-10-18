@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: crm
+    schema: raw_crm
+    tables:
+      - name: leads
+        description: >
+          Exportação diária do CRM (CSV do Excel). Cada arquivo traz todos os leads do dia;
+          o raw acumula uma fatia por arquivo, identificada por _source_file.
